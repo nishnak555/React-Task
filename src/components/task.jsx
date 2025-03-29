@@ -1,15 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export const Task1 = () => {
-  const [data, setData] = useState([
-    "Nishank",
-    "Sandeep",
-    1,
-    4,
-    "Khushi",
-    20,
-    39,
-  ]);
+  const initialData = ["Nishank", "Sandeep", 1, 4, "Khushi", 20, 39];
+  const [data, setData] = useState(initialData);
   const [firstValue, setFirstValue] = useState("");
   const [secondValue, setSecondValue] = useState("");
   const [activeInput, setActiveInput] = useState(null); // Track focused input
@@ -36,12 +29,14 @@ export const Task1 = () => {
   };
 
   const handleSubmit = () => {
-    if(firstValue !== "" && secondValue!=="")
-    alert(`key:${firstValue},value:${secondValue}`);
+    if (firstValue !== "" && secondValue !== "")
+      alert(`key:${firstValue},value:${secondValue}`);
   };
 
   const handleRefresh = () => {
-window.location.reload()
+    setFirstValue("");
+    setSecondValue("");
+    setData(initialData);
   };
   return (
     <div style={styles.container}>
@@ -76,8 +71,12 @@ window.location.reload()
         ))}
       </div>
       <div style={styles.btns}>
-        <button style={styles.btn} onClick={() => handleSubmit()}>Submit</button>
-        <button style={styles.btn} onClick={()=>handleRefresh()}>Refresh</button>
+        <button style={styles.btn} onClick={() => handleSubmit()}>
+          Submit
+        </button>
+        <button style={styles.btn} onClick={() => handleRefresh()}>
+          Refresh
+        </button>
       </div>
     </div>
   );
@@ -129,8 +128,8 @@ const styles = {
     gap: 10,
   },
 
-  btn:{
-    color:'white',
-    background:'black'
-  }
+  btn: {
+    color: "white",
+    background: "black",
+  },
 };
