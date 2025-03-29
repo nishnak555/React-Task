@@ -13,7 +13,6 @@ export const Task1 = () => {
   const [firstValue, setFirstValue] = useState("");
   const [secondValue, setSecondValue] = useState("");
   const [activeInput, setActiveInput] = useState(null); // Track focused input
-
   const inputRef = useRef(null);
 
   // Focus on first input field on component mount
@@ -33,9 +32,17 @@ export const Task1 = () => {
     }
 
     // Remove selected item from list safely
-    setData((prevData) => prevData.filter((_, i) => i !== index));    // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
+    setData((prevData) => prevData.filter((_, i) => i !== index)); // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
   };
 
+  const handleSubmit = () => {
+    if(firstValue !== "" && secondValue!=="")
+    alert(`key:${firstValue},value:${secondValue}`);
+  };
+
+  const handleRefresh = () => {
+window.location.reload()
+  };
   return (
     <div style={styles.container}>
       <h1>Fill the following Input</h1>
@@ -59,10 +66,18 @@ export const Task1 = () => {
 
       <div style={styles.cardContainer}>
         {data.map((item, index) => (
-          <div key={index} style={styles.card} onClick={() => handleOnClick(item, index)}>
+          <div
+            key={index}
+            style={styles.card}
+            onClick={() => handleOnClick(item, index)}
+          >
             {item}
           </div>
         ))}
+      </div>
+      <div style={styles.btns}>
+        <button style={styles.btn} onClick={() => handleSubmit()}>Submit</button>
+        <button style={styles.btn} onClick={()=>handleRefresh()}>Refresh</button>
       </div>
     </div>
   );
@@ -106,7 +121,16 @@ const styles = {
     textAlign: "center",
     cursor: "pointer",
     borderRadius: "5px",
-    transition: "0.3s",
   },
-};
+  btns: {
+    display: "flex",
+    flexDirection: "row",
+    padding: "30px",
+    gap: 10,
+  },
 
+  btn:{
+    color:'white',
+    background:'black'
+  }
+};
