@@ -9,6 +9,7 @@ export const Task1 = () => {
   const firstInputRef = useRef(null);
   const secondInputRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
+  const [submitUi, setSubmitUi] = useState(false);
 
   // Focus on first input field on component mount
   useEffect(() => {
@@ -18,7 +19,7 @@ export const Task1 = () => {
       secondInputRef.current.focus();
     }
   }, [activeInput]);
-  
+
   const handleOnClick = (item, index) => {
     if (firstValue !== "" && secondValue !== "") {
       return;
@@ -28,12 +29,17 @@ export const Task1 = () => {
       setActiveInput("second"); // Move focus to second input
     } else if (activeInput === "second") {
       setSecondValue(item);
-    } 
+    }
 
     setData((prevData) => prevData.filter((_, i) => i !== index)); // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
   };
 
-  const handleSubmit = () => alert(`key: ${firstValue}, value: ${secondValue}`);
+  const handleSubmit = () => {
+    const confirmed = confirm(`key: ${firstValue}, value: ${secondValue}`);
+    if (confirmed) {
+      setSubmitUi(true);
+    }
+  };
 
   const handleRefresh = () => {
     setFirstValue("");
@@ -48,7 +54,9 @@ export const Task1 = () => {
   }, [firstValue, secondValue]);
 
   return (
-    <div style={styles.container}>
+    <>
+    {
+      !submitUi &&    <div style={styles.container}>
       <h1>Fill the following Input</h1>
 
       <div style={styles.inputContainer}>
@@ -93,6 +101,11 @@ export const Task1 = () => {
         </button>
       </div>
     </div>
+    }
+    
+
+      <div>{submitUi && <h1>Thanks for Submitting first Task</h1>}</div>
+    </>
   );
 };
 
