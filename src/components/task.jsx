@@ -7,6 +7,7 @@ export const Task1 = () => {
   const [secondValue, setSecondValue] = useState("");
   const [activeInput, setActiveInput] = useState(null); // Track focused input
   const inputRef = useRef(null);
+  const [disabled, setDisabled] = useState(true);
 
   // Focus on first input field on component mount
   useEffect(() => {
@@ -24,7 +25,6 @@ export const Task1 = () => {
       return; // Prevent selecting if both inputs are filled
     }
 
-    // Remove selected item from list safely
     setData((prevData) => prevData.filter((_, i) => i !== index)); // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
   };
 
@@ -32,12 +32,18 @@ export const Task1 = () => {
     if (firstValue !== "" && secondValue !== "")
       alert(`key:${firstValue},value:${secondValue}`);
   };
-
   const handleRefresh = () => {
     setFirstValue("");
     setSecondValue("");
     setData(initialData);
+    setActiveInput("first");
+    inputRef.current?.focus();
   };
+
+  useEffect(() => {
+    setDisabled(!(firstValue !== "" && secondValue !== ""));
+  }, [firstValue, secondValue]);
+  
   return (
     <div style={styles.container}>
       <h1>Fill the following Input</h1>
@@ -47,13 +53,13 @@ export const Task1 = () => {
         <input
           ref={inputRef}
           value={firstValue}
-          onChange={(e) => setFirstValue(e.target.value)}
+          onChange={(e) => setFirstValue(e.target.value) }
           onFocus={() => setActiveInput("first")}
           style={styles.input}
         />
         <input
           value={secondValue}
-          onChange={(e) => setSecondValue(e.target.value)}
+          onChange={(e) => setSecondValue(e.target.value) }
           onFocus={() => setActiveInput("second")}
           style={styles.input}
         />
@@ -71,7 +77,11 @@ export const Task1 = () => {
         ))}
       </div>
       <div style={styles.btns}>
-        <button style={styles.btn} onClick={() => handleSubmit()}>
+        <button
+          disabled={disabled}
+          style={disabled ? { background: "#A9A9A9" } : styles.btn}
+          onClick={() => handleSubmit()}
+        >
           Submit
         </button>
         <button style={styles.btn} onClick={() => handleRefresh()}>
