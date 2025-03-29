@@ -5,45 +5,48 @@ export const Task1 = () => {
   const [data, setData] = useState(initialData);
   const [firstValue, setFirstValue] = useState("");
   const [secondValue, setSecondValue] = useState("");
-  const [activeInput, setActiveInput] = useState(null); // Track focused input
-  const inputRef = useRef(null);
+  const [activeInput, setActiveInput] = useState("first"); // Track focused input
+  const firstInputRef = useRef(null);
+  const secondInputRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
 
   // Focus on first input field on component mount
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+    if (activeInput === "first" && firstInputRef.current) {
+      firstInputRef.current.focus();
+    } else if (activeInput === "second" && secondInputRef.current) {
+      secondInputRef.current.focus();
     }
-  }, []);
-
+  }, [activeInput]);
+  
   const handleOnClick = (item, index) => {
-    if (activeInput === "first" && firstValue === "") {
-      setFirstValue(item);
-    } else if (activeInput === "second" && secondValue === "") {
-      setSecondValue(item);
-    } else {
-      return; // Prevent selecting if both inputs are filled
+    if (firstValue !== "" && secondValue !== "") {
+      return;
     }
+    if (activeInput === "first") {
+      setFirstValue(item);
+      setActiveInput("second"); // Move focus to second input
+    } else if (activeInput === "second") {
+      setSecondValue(item);
+    } 
 
     setData((prevData) => prevData.filter((_, i) => i !== index)); // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
   };
 
-  const handleSubmit = () => {
-    if (firstValue !== "" && secondValue !== "")
-      alert(`key:${firstValue},value:${secondValue}`);
-  };
+  const handleSubmit = () => alert(`key: ${firstValue}, value: ${secondValue}`);
+
   const handleRefresh = () => {
     setFirstValue("");
     setSecondValue("");
     setData(initialData);
     setActiveInput("first");
-    inputRef.current?.focus();
+    firstInputRef.current?.focus();
   };
 
   useEffect(() => {
     setDisabled(!(firstValue !== "" && secondValue !== ""));
   }, [firstValue, secondValue]);
-  
+
   return (
     <div style={styles.container}>
       <h1>Fill the following Input</h1>
@@ -51,15 +54,16 @@ export const Task1 = () => {
       <div style={styles.inputContainer}>
         <h2>Fill:</h2>
         <input
-          ref={inputRef}
+          ref={firstInputRef}
           value={firstValue}
-          onChange={(e) => setFirstValue(e.target.value) }
+          onChange={(e) => setFirstValue(e.target.value)}
           onFocus={() => setActiveInput("first")}
           style={styles.input}
         />
         <input
+          ref={secondInputRef}
           value={secondValue}
-          onChange={(e) => setSecondValue(e.target.value) }
+          onChange={(e) => setSecondValue(e.target.value)}
           onFocus={() => setActiveInput("second")}
           style={styles.input}
         />
@@ -101,6 +105,7 @@ const styles = {
     flexDirection: "column",
     padding: "10px",
     alignItems: "center",
+    justifyContent: "center",
   },
   inputContainer: {
     display: "flex",
@@ -141,5 +146,7 @@ const styles = {
   btn: {
     color: "white",
     background: "black",
+    padding: "10px",
+    cursor: "pointer",
   },
 };
