@@ -1,91 +1,65 @@
 import React, { useEffect, useRef, useState } from "react";
 
 export const Task1 = () => {
-  const [data, setdata] = useState([
+  const [data, setData] = useState([
     "Nishank",
     "Sandeep",
     1,
     4,
-    "khushi",
+    "Khushi",
     20,
     39,
   ]);
   const [firstValue, setFirstValue] = useState("");
-  const [SecondValue, setSecondValue] = useState("");
+  const [secondValue, setSecondValue] = useState("");
   const [activeInput, setActiveInput] = useState(null); // Track focused input
 
-  const inputref = useRef(null);
-  const Secondinputref = useRef(null);
+  const inputRef = useRef(null);
 
-  // Focus on component mount
+  // Focus on first input field on component mount
   useEffect(() => {
-    if (inputref.current) {
-      inputref.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   }, []);
 
-  const handleOnclick = (item, i) => {
-    if (activeInput === "first") {
+  const handleOnClick = (item, index) => {
+    if (activeInput === "first" && firstValue === "") {
       setFirstValue(item);
-    } else if (activeInput === "second") {
+    } else if (activeInput === "second" && secondValue === "") {
       setSecondValue(item);
+    } else {
+      return; // Prevent selecting if both inputs are filled
     }
 
-    setdata(data.filter((_, index) => index !== i));
+    // Remove selected item from list safely
+    setData((prevData) => prevData.filter((_, i) => i !== index));    // React batches state updates. By using a function inside setData, React will always apply the most recent version of data.
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid black",
-        height: "500px",
-        width: "500px",
-        display: "flex",
-        flexDirection: "column",
-        padding: 10,
-      }}
-    >
+    <div style={styles.container}>
       <h1>Fill the following Input</h1>
 
-      <div style={{ display: "flex", flexDirection: "row", gap: 4 }}>
-        <h1>Fill:</h1>
+      <div style={styles.inputContainer}>
+        <h2>Fill:</h2>
         <input
-          ref={inputref}
+          ref={inputRef}
           value={firstValue}
           onChange={(e) => setFirstValue(e.target.value)}
           onFocus={() => setActiveInput("first")}
-          style={{ height: "30px", marginTop: "50px" }}
+          style={styles.input}
         />
         <input
-          ref={Secondinputref}
-          value={SecondValue}
+          value={secondValue}
           onChange={(e) => setSecondValue(e.target.value)}
           onFocus={() => setActiveInput("second")}
-          style={{ height: "30px", marginTop: "50px" }}
+          style={styles.input}
         />
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 4,
-          margin: 10,
-          flexWrap: "wrap",
-        }}
-      >
+      <div style={styles.cardContainer}>
         {data.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              border: "1px solid black",
-              width: "200px",
-              padding: "5px",
-              textAlign: "center",
-              cursor: "pointer",
-            }}
-            onClick={() => handleOnclick(item, index)}
-          >
+          <div key={index} style={styles.card} onClick={() => handleOnClick(item, index)}>
             {item}
           </div>
         ))}
@@ -93,3 +67,46 @@ export const Task1 = () => {
     </div>
   );
 };
+
+const styles = {
+  container: {
+    border: "1px solid black",
+    height: "500px",
+    width: "500px",
+    display: "flex",
+    flexDirection: "column",
+    padding: "10px",
+    alignItems: "center",
+  },
+  inputContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: "10px",
+    marginBottom: "20px",
+  },
+  input: {
+    height: "30px",
+    padding: "5px",
+    border: "1px solid black",
+    borderRadius: "5px",
+    outline: "none",
+  },
+  cardContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: "10px",
+    justifyContent: "center",
+  },
+  card: {
+    border: "1px solid black",
+    width: "100px",
+    padding: "5px",
+    textAlign: "center",
+    cursor: "pointer",
+    borderRadius: "5px",
+    transition: "0.3s",
+  },
+};
+
