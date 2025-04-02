@@ -4,7 +4,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 
 const Accordian = () => {
-  const [arrow, setarrow] = useState(true);
+  const [arrow, setarrow] = useState(false);
 
   const handleArrowClick = () => {
     setarrow(!arrow);
@@ -40,6 +40,7 @@ const Accordian = () => {
           facilis voluptate corporis, inventore iure eveniet. Aut rerum
           laudantium accusantium voluptates, doloribus totam adipisci quaerat
           ipsum!
+          
         </p>
       </div>
     </div>
